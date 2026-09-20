@@ -1,0 +1,35 @@
+{
+  "name": "@lingocraft/identity",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Auth adapter (Clerk), scope resolution, tenant membership — T02",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@lingocraft/domain": "workspace:*",
+    "@lingocraft/database": "workspace:*"
+  },
+  "devDependencies": {
+    "@lingocraft/config": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  },
+  "peerDependencies": {
+    "pg": "^8.13.1"
+  }
+}

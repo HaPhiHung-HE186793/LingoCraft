@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "template_id": "scene_builder_v1",
+  "renderer_version": "1.0.0",
+  "ui_locale": "vi-VN",
+  "interaction": {
+    "input_modes": [
+      "tap",
+      "keyboard",
+      "drag"
+    ],
+    "max_answer_tokens": 12
+  },
+  "game_id": "12222222-2222-4222-8222-222222222222",
+  "target_language": "en",
+  "title_vi": "Rẽ ở đèn giao thông",
+  "objective_vi": "Chỉ dẫn rẽ trái tại một mốc địa điểm.",
+  "prompt_vi": "Hãy chỉ đường: rẽ trái ở đèn giao thông.",
+  "source_refs": [
+    {
+      "item_id": "22222222-2222-4222-8222-222222222222",
+      "revision_id": "32222222-2222-4222-8222-222222222222"
+    }
+  ],
+  "scene": {
+    "description_vi": "Đường đi tới đèn giao thông, sau đó rẽ trái.",
+    "nodes": [
+      {
+        "id": "node_route",
+        "icon_id": "left_turn",
+        "label_vi": "Rẽ trái"
+      },
+      {
+        "id": "node_light",
+        "icon_id": "traffic_light",
+        "label_vi": "Đèn giao thông"
+      }
+    ],
+    "edges": [
+      {
+        "from": "node_route",
+        "to": "node_light",
+        "relation": "turns_at"
+      }
+    ]
+  },
+  "tokens": [
+    {
+      "id": "tok_turn",
+      "text": "Turn"
+    },
+    {
+      "id": "tok_left",
+      "text": "left"
+    },
+    {
+      "id": "tok_at",
+      "text": "at"
+    },
+    {
+      "id": "tok_the",
+      "text": "the"
+    },
+    {
+      "id": "tok_lights",
+      "text": "traffic lights"
+    },
+    {
+      "id": "tok_right",
+      "text": "right"
+    },
+    {
+      "id": "tok_under",
+      "text": "under"
+    }
+  ]
+}

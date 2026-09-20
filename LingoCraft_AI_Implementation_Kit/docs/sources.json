@@ -1,0 +1,242 @@
+[
+  {
+    "id": "S01",
+    "title": "Quizlet — Creating study sets with Smart Assist",
+    "url": "https://help.quizlet.com/hc/en-us/articles/39606772122509-Creating-study-sets-with-Smart-Assist",
+    "use": "Xác nhận đối thủ đã có tạo thẻ bằng AI; không dùng định vị 'Quizlet không có AI'."
+  },
+  {
+    "id": "S02",
+    "title": "Roediger & Karpicke (2006) — Test-enhanced learning",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/16507066/",
+    "use": "Cơ sở cho kiểm tra truy hồi; không phải bằng chứng riêng cho hiệu quả sản phẩm đề xuất."
+  },
+  {
+    "id": "S03",
+    "title": "Lally et al. (2010) — How are habits formed",
+    "url": "https://onlinelibrary.wiley.com/doi/10.1002/ejsp.674",
+    "use": "Thói quen khác nhau giữa người và hành vi; không hứa hình thành sau 1–2 lần."
+  },
+  {
+    "id": "S04",
+    "title": "Pashler et al. — Learning Styles: Concepts and Evidence",
+    "url": "https://journals.sagepub.com/doi/10.1111/j.1539-6053.2009.01038.x",
+    "use": "Không gán người học vào 'kiểu học thị giác/thính giác' như một chẩn đoán khoa học."
+  },
+  {
+    "id": "S05",
+    "title": "Anki Manual — Deck Options / FSRS",
+    "url": "https://docs.ankiweb.net/deck-options.html",
+    "use": "FSRS, retention và tải ôn; phân biệt Hard với quên; cá nhân hóa theo lịch sử."
+  },
+  {
+    "id": "S06",
+    "title": "Open Spaced Repetition — ts-fsrs",
+    "url": "https://github.com/open-spaced-repetition/ts-fsrs",
+    "use": "Thư viện ứng viên cho adapter lập lịch; kiểm tra phiên bản, API, giấy phép khi triển khai."
+  },
+  {
+    "id": "S07",
+    "title": "Council of Europe — CEFR level descriptions",
+    "url": "https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions",
+    "use": "Can-do và mô tả năng lực; không quy đổi máy móc sang JLPT."
+  },
+  {
+    "id": "S08",
+    "title": "Japan Foundation — Irodori Starter, Lesson 13",
+    "url": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L13.pdf",
+    "use": "Đối chiếu cách dùng phương tiện + で + 行きます; đã kiểm tra trang PDF 25. Không mặc định quyền sao chép học liệu."
+  },
+  {
+    "id": "S09",
+    "title": "British Council — Giving directions",
+    "url": "https://learnenglishteens.britishcouncil.org/skills/listening/a2-listening/giving-directions",
+    "use": "Tham chiếu tình huống chỉ đường; ví dụ trong đặc tả là nội dung minh họa tự soạn."
+  },
+  {
+    "id": "S10",
+    "title": "NestJS — Documentation",
+    "url": "https://docs.nestjs.com/",
+    "use": "Modules, dependency injection, TypeScript; Express/Fastify."
+  },
+  {
+    "id": "S11",
+    "title": "Drizzle ORM — Overview",
+    "url": "https://orm.drizzle.team/docs/overview",
+    "use": "ORM hướng SQL; xác minh driver và migration tương thích ở thời điểm dựng dự án."
+  },
+  {
+    "id": "S12",
+    "title": "Next.js — Progressive Web Apps",
+    "url": "https://nextjs.org/docs/app/guides/progressive-web-apps",
+    "use": "Nền tảng triển khai PWA; không đồng nghĩa có quyền của native app."
+  },
+  {
+    "id": "S13",
+    "title": "Render — Background Workers",
+    "url": "https://render.com/docs/background-workers",
+    "use": "Tiến trình worker cho import, sinh nội dung, media và tác vụ nền."
+  },
+  {
+    "id": "S14",
+    "title": "Render — Free instances",
+    "url": "https://render.com/docs/free",
+    "use": "Giới hạn sleep, filesystem và loại dịch vụ; không chọn free tier làm cam kết production."
+  },
+  {
+    "id": "S15",
+    "title": "Render — Cron Jobs",
+    "url": "https://render.com/docs/cronjobs",
+    "use": "Lịch UTC, giới hạn chạy; cần ánh xạ múi giờ người dùng."
+  },
+  {
+    "id": "S16",
+    "title": "Render — Monorepo support",
+    "url": "https://render.com/docs/monorepo-support",
+    "use": "Build context và service riêng trong một monorepo."
+  },
+  {
+    "id": "S17",
+    "title": "Render — Blueprint specification",
+    "url": "https://render.com/docs/blueprint-spec",
+    "use": "Mẫu render.yaml; cần xác minh plan, region và lệnh với repo thực tế."
+  },
+  {
+    "id": "S18",
+    "title": "Vercel — Hobby plan",
+    "url": "https://vercel.com/docs/plans/hobby",
+    "use": "Hobby dành cho cá nhân phi thương mại; launch thương mại phải chọn gói phù hợp."
+  },
+  {
+    "id": "S19",
+    "title": "Neon — Connection pooling (official repository mirror)",
+    "url": "https://github.com/neondatabase/website/blob/main/content/docs/connect/connection-pooling.md",
+    "use": "Transaction pooling, URL pooled/direct và giới hạn session state. Bản tài liệu chính thức trong repo Neon."
+  },
+  {
+    "id": "S20",
+    "title": "Neon — pgvector (official repository mirror)",
+    "url": "https://github.com/neondatabase/website/blob/main/content/docs/extensions/pgvector.md",
+    "use": "Khả năng lưu/tìm vector trên Neon; không suy ra năng lực tải chỉ từ số connection."
+  },
+  {
+    "id": "S21",
+    "title": "PostgreSQL — Row Security Policies",
+    "url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+    "use": "RLS, owner/BYPASSRLS, default deny; phải test với đúng role runtime."
+  },
+  {
+    "id": "S22",
+    "title": "pgvector — Official repository",
+    "url": "https://github.com/pgvector/pgvector",
+    "use": "Tìm kiếm vector, filter và trade-off index/recall."
+  },
+  {
+    "id": "S23",
+    "title": "PgBouncer — Features",
+    "url": "https://www.pgbouncer.org/features.html",
+    "use": "Giới hạn transaction pooling và tính năng phụ thuộc session."
+  },
+  {
+    "id": "S24",
+    "title": "pg-boss — Official repository",
+    "url": "https://github.com/timgit/pg-boss",
+    "use": "Queue dựa trên PostgreSQL; ứng dụng vẫn phải idempotent với side effect bên ngoài."
+  },
+  {
+    "id": "S25",
+    "title": "Cloudflare — R2 documentation",
+    "url": "https://developers.cloudflare.com/r2/",
+    "use": "Object storage cho file/ảnh/audio, tách metadata lưu trong Neon."
+  },
+  {
+    "id": "S26",
+    "title": "Spring Modulith — Reference documentation",
+    "url": "https://docs.spring.io/spring-modulith/reference/",
+    "use": "Phương án Java cho đội ngũ có kinh nghiệm Spring; không buộc dùng hai BE."
+  },
+  {
+    "id": "S27",
+    "title": "Clerk — Manual JWT verification",
+    "url": "https://clerk.com/docs/guides/sessions/manual-jwt-verification",
+    "use": "Xác minh token, issuer, thời hạn, authorized parties; membership vẫn thuộc ứng dụng."
+  },
+  {
+    "id": "S28",
+    "title": "OpenAI — Structured model outputs",
+    "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+    "use": "Schema-constrained output là một lựa chọn adapter, không bảo đảm đúng ngữ nghĩa."
+  },
+  {
+    "id": "S29",
+    "title": "OWASP — Top 10 for Large Language Model Applications",
+    "url": "https://owasp.org/projects/top-10-for-large-language-model-applications/",
+    "use": "Prompt injection, excessive agency, dữ liệu nhạy cảm và ranh giới tin cậy."
+  },
+  {
+    "id": "S30",
+    "title": "React Flow — Learn",
+    "url": "https://reactflow.dev/learn",
+    "use": "Renderer bản đồ tương tác; thư viện không thay thế mô hình ngữ nghĩa."
+  },
+  {
+    "id": "S31",
+    "title": "W3C — Web Content Accessibility Guidelines 2.2",
+    "url": "https://www.w3.org/TR/WCAG22/",
+    "use": "Mục tiêu AA: contrast, keyboard, drag alternative; 44–48 px là lựa chọn thiết kế nâng cao."
+  },
+  {
+    "id": "S32",
+    "title": "WebKit — Web Push for Web Apps on iOS and iPadOS",
+    "url": "https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/",
+    "use": "iOS/iPadOS 16.4+, Home Screen app, quyền qua thao tác trực tiếp; OS kiểm soát thông báo."
+  },
+  {
+    "id": "S33",
+    "title": "Apple — WidgetKit",
+    "url": "https://developer.apple.com/documentation/widgetkit",
+    "use": "Hướng native widget; tính năng cụ thể cần prototype theo phiên bản hệ điều hành."
+  },
+  {
+    "id": "S34",
+    "title": "Android — Create notifications",
+    "url": "https://developer.android.com/develop/ui/compose/notifications/create-notification",
+    "use": "Thông báo native Android; quyền và hành vi theo hệ điều hành."
+  },
+  {
+    "id": "S35",
+    "title": "Android 14 — Secure full-screen Intent notifications",
+    "url": "https://developer.android.com/about/versions/14/behavior-changes-14#secure-fsi",
+    "use": "Full-screen intent không phải lối tắt hợp lệ để cưỡng ép flashcard mỗi lần bật máy."
+  },
+  {
+    "id": "S36",
+    "title": "VS Code — Agent Skills",
+    "url": "https://code.visualstudio.com/docs/agent-customization/agent-skills",
+    "use": "Đường dẫn .agents/skills được hỗ trợ bởi agent tương thích; không phải mọi extension đều giống nhau."
+  },
+  {
+    "id": "S37",
+    "title": "Google Antigravity — Agent Skills",
+    "url": "https://antigravity.google/docs/skills",
+    "use": "Workspace skills .agents/skills; .agent/skills được giữ cho tương thích."
+  },
+  {
+    "id": "S38",
+    "title": "Agent Skills — Specification",
+    "url": "https://agentskills.io/specification",
+    "use": "SKILL.md, YAML frontmatter, mô tả để chọn skill và progressive disclosure."
+  },
+  {
+    "id": "S39",
+    "title": "Render — Pricing",
+    "url": "https://render.com/pricing",
+    "use": "Đối chiếu gói lúc mua; số tiền trong mô hình ngân sách của tài liệu là giả định, không báo giá."
+  },
+  {
+    "id": "S40",
+    "title": "Vercel — Pricing",
+    "url": "https://vercel.com/pricing",
+    "use": "Đối chiếu gói thương mại và usage lúc mua; không khóa giá hiện hành vào đặc tả."
+  }
+]

@@ -1,0 +1,48 @@
+# REFERENCE TEMPLATE, not deployed or provider-validated against a live account.
+# First create workspace package scripts and choose paid plans/region in Render.
+# Verify Blueprint schema and current runtime support before applying.
+services:
+  - type: web
+    name: lingocraft-api
+    runtime: node
+    buildCommand: npm install --global pnpm@${PNPM_VERSION} && pnpm install --frozen-lockfile && pnpm --filter @lingocraft/api... build
+    startCommand: pnpm --filter @lingocraft/api start:prod
+    healthCheckPath: /health/ready
+    envVars:
+      - key: NODE_VERSION
+        sync: false
+      - key: PNPM_VERSION
+        sync: false
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: AUTH_ISSUER
+        sync: false
+      - key: AUTH_ALLOWED_PARTIES
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+  - type: worker
+    name: lingocraft-worker
+    runtime: node
+    buildCommand: npm install --global pnpm@${PNPM_VERSION} && pnpm install --frozen-lockfile && pnpm --filter @lingocraft/worker... build
+    startCommand: pnpm --filter @lingocraft/worker start:prod
+    envVars:
+      - key: NODE_VERSION
+        sync: false
+      - key: PNPM_VERSION
+        sync: false
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_DIRECT_URL
+        sync: false
+      - key: AI_PROVIDER
+        sync: false
+      - key: AI_API_KEY
+        sync: false
+# Add storage/model/push/quota/observability variables from .env.example.
+# API must bind process.env.PORT on 0.0.0.0; worker exposes no public API.
+# Migration is a separate approved pipeline, never each replica startup.

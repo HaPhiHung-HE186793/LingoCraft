@@ -1,0 +1,2 @@
+PASS: 93 offline reference checks; 2 game/key fixture pairs; 10 review-policy cases; 12 skills.
+NOT TESTED: app code, live providers, human language approval, database/RLS, real FSRS, E2E, hosting, device behavior, load/security.

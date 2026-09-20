@@ -1,0 +1,92 @@
+[
+  {
+    "id": "recall-wrong-then-correct",
+    "task": "free_recall",
+    "first_verdict": "incorrect",
+    "hint_before_first": false,
+    "hint_after_first": true,
+    "self_rating": null,
+    "expected": "Again"
+  },
+  {
+    "id": "hint-before-first",
+    "task": "free_recall",
+    "first_verdict": null,
+    "hint_before_first": true,
+    "hint_after_first": false,
+    "self_rating": null,
+    "expected": "NO_UPDATE"
+  },
+  {
+    "id": "unaided-correct",
+    "task": "free_recall",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": null,
+    "expected": "Good"
+  },
+  {
+    "id": "effortful-correct",
+    "task": "free_recall",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": "Hard",
+    "expected": "Hard"
+  },
+  {
+    "id": "explicit-easy",
+    "task": "free_recall",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": "Easy",
+    "expected": "Easy"
+  },
+  {
+    "id": "scene-builder-is-practice",
+    "task": "scene_builder",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": null,
+    "expected": "NO_UPDATE"
+  },
+  {
+    "id": "uncertain",
+    "task": "free_recall",
+    "first_verdict": "uncertain",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": null,
+    "expected": "NO_UPDATE"
+  },
+  {
+    "id": "recognition-is-not-recall",
+    "task": "intent_match",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": null,
+    "expected": "NO_UPDATE"
+  },
+  {
+    "id": "forgot-not-hard",
+    "task": "free_recall",
+    "first_verdict": "incorrect",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": "Hard",
+    "expected": "Again"
+  },
+  {
+    "id": "post-feedback-practice",
+    "task": "same_session_practice",
+    "first_verdict": "correct",
+    "hint_before_first": false,
+    "hint_after_first": false,
+    "self_rating": "Easy",
+    "expected": "NO_UPDATE"
+  }
+]

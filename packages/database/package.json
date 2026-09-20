@@ -1,0 +1,37 @@
+{
+  "name": "@lingocraft/database",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Drizzle schema, migrations, and scoped transaction helpers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/migrate.ts",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@lingocraft/domain": "workspace:*",
+    "drizzle-orm": "^0.36.4",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@lingocraft/config": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.28.1",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

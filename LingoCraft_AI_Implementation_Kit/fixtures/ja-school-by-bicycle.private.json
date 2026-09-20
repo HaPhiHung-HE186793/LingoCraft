@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "game_id": "11111111-1111-4111-8111-111111111111",
+  "canonical_text": "私は自転車で学校に行きます。",
+  "accepted_token_sequences": [
+    [
+      "tok_watashi",
+      "tok_wa",
+      "tok_bicycle",
+      "tok_de",
+      "tok_school",
+      "tok_ni",
+      "tok_go"
+    ],
+    [
+      "tok_watashi",
+      "tok_wa",
+      "tok_bicycle",
+      "tok_de",
+      "tok_school",
+      "tok_he",
+      "tok_go"
+    ],
+    [
+      "tok_bicycle",
+      "tok_de",
+      "tok_school",
+      "tok_ni",
+      "tok_go"
+    ],
+    [
+      "tok_bicycle",
+      "tok_de",
+      "tok_school",
+      "tok_he",
+      "tok_go"
+    ]
+  ],
+  "semantic_slots": {
+    "actor": "Người nói, đã rõ trong cảnh; có thể lược chủ đề.",
+    "transport": "Xe đạp, không phải xe buýt.",
+    "destination": "Trường học.",
+    "style": "Câu lịch sự hiện tại/không quá khứ."
+  },
+  "hints": [
+    {
+      "level": 1,
+      "kind": "grammar",
+      "text_vi": "Ai + phương tiện + で + nơi đến + に/へ + động từ đi. Trong bài này hai cách nêu đích đến đều được chấp nhận.",
+      "reveals_answer": false
+    },
+    {
+      "level": 2,
+      "kind": "semantic",
+      "text_vi": "Cần từ chỉ xe đạp và từ chỉ trường học; đây không phải chuyến đi bằng xe buýt.",
+      "reveals_answer": false
+    },
+    {
+      "level": 3,
+      "kind": "partial_answer",
+      "text_vi": "Từ trường học đọc là がっ…こう. Khác với đại học: だいがく.",
+      "reveals_answer": true
+    },
+    {
+      "level": 4,
+      "kind": "full_answer",
+      "text_vi": "Một cách nói: 私は自転車で学校に行きます。",
+      "reveals_answer": true
+    }
+  ],
+  "memory_effect": "practice_only",
+  "review_status": "draft"
+}

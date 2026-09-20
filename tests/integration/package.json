@@ -1,0 +1,23 @@
+{
+  "name": "@lingocraft/integration-tests",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Integration tests requiring real PostgreSQL with runtime role",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@lingocraft/database": "workspace:*",
+    "@lingocraft/domain": "workspace:*",
+    "@lingocraft/identity": "workspace:*"
+  },
+  "devDependencies": {
+    "@lingocraft/config": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "pg": "^8.13.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

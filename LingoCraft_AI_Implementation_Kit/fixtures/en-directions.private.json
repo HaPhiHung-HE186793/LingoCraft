@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "game_id": "12222222-2222-4222-8222-222222222222",
+  "canonical_text": "Turn left at the traffic lights.",
+  "accepted_token_sequences": [
+    [
+      "tok_turn",
+      "tok_left",
+      "tok_at",
+      "tok_the",
+      "tok_lights"
+    ]
+  ],
+  "semantic_slots": {
+    "direction": "left",
+    "landmark": "traffic lights",
+    "intent": "instruction"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "kind": "grammar",
+      "text_vi": "Động từ chỉ hướng + hướng rẽ + giới từ + mốc địa điểm.",
+      "reveals_answer": false
+    },
+    {
+      "level": 2,
+      "kind": "semantic",
+      "text_vi": "Chọn trái thay vì phải; mốc là nơi có đèn điều khiển giao thông.",
+      "reveals_answer": false
+    },
+    {
+      "level": 3,
+      "kind": "partial_answer",
+      "text_vi": "Câu bắt đầu bằng Turn left…",
+      "reveals_answer": true
+    },
+    {
+      "level": 4,
+      "kind": "full_answer",
+      "text_vi": "Turn left at the traffic lights.",
+      "reveals_answer": true
+    }
+  ],
+  "memory_effect": "practice_only",
+  "review_status": "draft"
+}

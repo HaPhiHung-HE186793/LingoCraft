@@ -1,0 +1,157 @@
+{
+  "kit_version": "1.0.0",
+  "date": "2026-09-20",
+  "status": "specification_and_reference_fixtures_only",
+  "skill_count": 12,
+  "offline_reference_checks_passed": 93,
+  "files": [
+    {
+      "path": ".agents/skills/deploy-observability/SKILL.md",
+      "sha256": "d4f2f4dc2e03c5abc094519ba10100cc83e3cbb83a8f11272ab94dab33eab13a"
+    },
+    {
+      "path": ".agents/skills/frontend-responsive/SKILL.md",
+      "sha256": "82d49740c2f5a8a213827e33cd2e1af078af37fc3f577204888476988e9d0b2c"
+    },
+    {
+      "path": ".agents/skills/fsrs-learning-engine/SKILL.md",
+      "sha256": "eef86c028fc075ca2e6eb9db97cb9621a93d8f713272b67aeaf9d40f5c96b786"
+    },
+    {
+      "path": ".agents/skills/import-pipeline/SKILL.md",
+      "sha256": "4876f8fd57f6907ba54b29c1a4a0d70b4a843dbe0cde7817eada0fffeb798a6d"
+    },
+    {
+      "path": ".agents/skills/knowledge-map/SKILL.md",
+      "sha256": "ea8fff17e1216e9a6914b7e7ddad62cb4688d4a5cbf5af22dc36f309dd62842d"
+    },
+    {
+      "path": ".agents/skills/language-game-engine/SKILL.md",
+      "sha256": "731c0b2890fe96f9809d4ffa22f2e686bd1c6fc241eae2b3bb70f5fdd37c47d7"
+    },
+    {
+      "path": ".agents/skills/modular-backend/SKILL.md",
+      "sha256": "ec332a1f0161eb3d6cefd1fa26638687a4ccf88c57baf858307fa96f85d072a0"
+    },
+    {
+      "path": ".agents/skills/neon-data-security/SKILL.md",
+      "sha256": "97f37ada2930b3cd18bd55f0095e787dc44d4c252bd2e92f71cea963f833b1bf"
+    },
+    {
+      "path": ".agents/skills/product-pedagogy/SKILL.md",
+      "sha256": "02a846406fcfde794b60ac9c88dd9c5fe99579b899119814f9ffe1bd4a416611"
+    },
+    {
+      "path": ".agents/skills/pwa-notifications/SKILL.md",
+      "sha256": "a915972325e467e6370087fc2deecd1bd77629de2884be31c47725ea45d29688"
+    },
+    {
+      "path": ".agents/skills/safe-ai-generation/SKILL.md",
+      "sha256": "19c5a2f49ffdcce61bbce3e3eb69d3ebe63bfb988ad79c6a8ba3e00814d68e74"
+    },
+    {
+      "path": ".agents/skills/testing-evaluations/SKILL.md",
+      "sha256": "876129eb8b31c0bf093ea5c8c3f0fe7d1c5fe5f39c9238b419417ff15c9360ca"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "fdf5566f27751000400d4eff39fe72ff30fb0bd977dbcf779962e5e15fa3ccb7"
+    },
+    {
+      "path": "PROJECT_SPEC.md",
+      "sha256": "9f4c51ce5c9b26509c5339cc0f6509e6d4fc5de5e38ee24c086603bfb2cb0007"
+    },
+    {
+      "path": "START_HERE.md",
+      "sha256": "715fc9cea13ca0d36938a18a04b3bd68e259bdcc4e73aa4f4011bb7d6b8d9bfe"
+    },
+    {
+      "path": "contracts/README.md",
+      "sha256": "a79608bd8dcd4f693dea6acf3994e5cbd1f5f009ef08a71b74e98ad28ab4b9f7"
+    },
+    {
+      "path": "contracts/game-spec.schema.json",
+      "sha256": "977eb3f7a5ba880333965a57f42ea7514f48665bbbcfa53003ab36cf5cbb5581"
+    },
+    {
+      "path": "contracts/private-answer-key.schema.json",
+      "sha256": "7938f857b454d3081ea68b6c87cf34d88b463580cd5ede6310f26ae789e547a6"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "e8b7e24c4a982f6307b965d479a2c46ebddfdb66f490c3a42609bb85ed45fcf5"
+    },
+    {
+      "path": "docs/KIT_VALIDATION.txt",
+      "sha256": "12b8fe657e6e699811b5452efe829d80ad9386ddce6a4a927120c598dac987ab"
+    },
+    {
+      "path": "docs/SOURCES.md",
+      "sha256": "091934b6800535b8984bf7147e4598809f10bd3c1821ca36d7771ee244e12d36"
+    },
+    {
+      "path": "docs/WORK_LOG.md",
+      "sha256": "5626388807d3262e72cf884134fe19198078ffac28d8f71223aeaf51543744bd"
+    },
+    {
+      "path": "docs/adr/TEMPLATE.md",
+      "sha256": "419e29332daf499245ced25d946691bb368ca73824e07dcd3ccc0b8f0ec8f890"
+    },
+    {
+      "path": "docs/sources.json",
+      "sha256": "7bff32819bc5fe283547f940a410c818a56bd4a88015b52816b6c78aeb3d5929"
+    },
+    {
+      "path": "examples/.env.example",
+      "sha256": "07a74b70edc677bb367f6ee380155379f685d467345c7a25d033722bc9a7b9ff"
+    },
+    {
+      "path": "examples/DEPLOY_NOTES.md",
+      "sha256": "f7c210eae7cae1276afa1b49e541e82549e22f7a209df85e9c3289edc76c985f"
+    },
+    {
+      "path": "examples/render.yaml",
+      "sha256": "da396fd09515e7de44d77ac6bc17dec6978c82048c266b7fab8fc0c5925bd410"
+    },
+    {
+      "path": "fixtures/README.md",
+      "sha256": "cddc317f0f8b4ef32799dfc7b511c74e1f16b02135b3aa7a14d7e30a3d2d3f04"
+    },
+    {
+      "path": "fixtures/en-directions.private.json",
+      "sha256": "3576daa3266cdbbe8fb0bb44739957a71d2ddf797b90c1f57e97092c10f9e126"
+    },
+    {
+      "path": "fixtures/en-directions.public.json",
+      "sha256": "127fb4303daa80c4b7244b60e9fd1f62c480f36e1a7ef4f7f1591a8ffb108974"
+    },
+    {
+      "path": "fixtures/ja-school-by-bicycle.private.json",
+      "sha256": "825b33c10787c6fdecbdcf38b788616f1485c859f2e6c41ff40dbde4da0818c4"
+    },
+    {
+      "path": "fixtures/ja-school-by-bicycle.public.json",
+      "sha256": "fcb279c60c59405db6c2562ab396df517b70719c4578b3214fcb93403d32b6b8"
+    },
+    {
+      "path": "fixtures/review-policy-cases.json",
+      "sha256": "235f6ded1d11c85173a70e81267b0ab56861ff1708fbc4cb1122f835f4bb5fda"
+    },
+    {
+      "path": "prompts/answer-feedback.md",
+      "sha256": "369a630cbb94577c268ad789964e8b6ad37c531a06426cf9e83a778b74b4524b"
+    },
+    {
+      "path": "prompts/game-generation.md",
+      "sha256": "8cce7fa0e89f83825f40e42ba1cd4e20a547ab500fbacee95902dfb72832bee8"
+    },
+    {
+      "path": "prompts/intent-to-map.md",
+      "sha256": "957a51284108607da16b7c75e2cb3598db68400a05b0a960a4c2639f0ef5adc8"
+    },
+    {
+      "path": "scripts/validate_kit.py",
+      "sha256": "6f0ef90d0a5e078ccddefe40f1fe92aa8683d71a35a75d37ebb323d5c996fccf"
+    }
+  ]
+}

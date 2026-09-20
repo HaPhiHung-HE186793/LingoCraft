@@ -1,0 +1,29 @@
+{
+  "name": "@lingocraft/worker",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Queue consumer process — no public HTTP API",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@lingocraft/database": "workspace:*",
+    "@lingocraft/domain": "workspace:*",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@lingocraft/config": "workspace:*",
+    "@types/node": "^22.7.5",
+    "@types/pg": "^8.11.10",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

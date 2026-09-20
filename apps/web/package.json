@@ -1,0 +1,26 @@
+{
+  "name": "@lingocraft/web",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Next.js frontend — PWA, responsive, accessible",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@lingocraft/contracts": "workspace:*",
+    "next": "15.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@lingocraft/config": "workspace:*",
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}
