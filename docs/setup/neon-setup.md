@@ -18,21 +18,34 @@ LingoCraft dùng **Neon PostgreSQL** với hai roles riêng biệt:
 
 ## 2. Tạo Roles
 
-Trong Neon Console → **SQL Editor** (hoặc psql với superuser connection):
+> ⚠️ **Neon yêu cầu password mạnh**: tối thiểu 12+ ký tự, có chữ HOA, chữ thường, số, và ký tự đặc biệt.
+> Password ngắn hoặc đơn giản (như `Hung@1704`) sẽ bị từ chối với lỗi "insecure password".
 
+**Bước 1**: Tạo password ngẫu nhiên an toàn (chạy trong PowerShell):
+```powershell
+# Tạo password ngẫu nhiên 32 ký tự
+[System.Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(24))
+# Ví dụ output: K7mPxQr2vNsYwZ4LbDhJc8TnFe6gAoRq
+```
+
+**Bước 2**: Dán vào Neon SQL Editor:
 ```sql
 -- Tạo runtime role (không có BYPASSRLS)
-CREATE ROLE lc_app WITH LOGIN PASSWORD 'your_strong_password_here';
+-- Thay YOUR_STRONG_APP_PASSWORD bằng password từ bước 1
+CREATE ROLE lc_app WITH LOGIN PASSWORD 'YOUR_STRONG_APP_PASSWORD_HERE_32chars+';
 
--- Tạo migration role
-CREATE ROLE lc_migrate WITH LOGIN PASSWORD 'your_strong_migration_password_here';
+-- Tạo migration role (dùng password KHÁC với lc_app)
+-- Thay YOUR_STRONG_MIGRATE_PASSWORD bằng password khác từ bước 1
+CREATE ROLE lc_migrate WITH LOGIN PASSWORD 'YOUR_STRONG_MIGRATE_PASSWORD_HERE_32+';
 
 -- Grant migration role schema access
 GRANT ALL ON SCHEMA public TO lc_migrate;
-GRANT lc_migrate TO neon_superuser;  -- Neon-specific: allow superuser to act as lc_migrate
+GRANT lc_migrate TO neon_superuser;
 ```
 
-> ⚠️ Dùng password mạnh (random, ≥32 ký tự). Lưu vào password manager — **không commit vào code**.
+> 💡 Gợi ý format password hợp lệ với Neon: `LcApp@2026!xKmP9rQnWvZsYb3TdHjF` (chữ hoa, thường, số, ký tự đặc biệt, ≥16 ký tự)
+
+> ⚠️ Lưu cả 2 password vào password manager ngay — **không commit vào code**.
 
 ## 3. Lấy Connection Strings
 

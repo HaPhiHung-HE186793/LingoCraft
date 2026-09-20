@@ -9,20 +9,19 @@
  *   "Integration dùng PostgreSQL runtime role thật để test RLS; mock DB không đủ."
  *
  * ── PREREQUISITES ─────────────────────────────────────────────────────────
- * 1. PostgreSQL running locally or Neon connection available
- * 2. Migrations 001_foundation.sql and 002_rls.sql applied
- * 3. lc_app role created with limited permissions (no BYPASSRLS)
+ * 1. PostgreSQL running (Neon) with migrations 001 + 002 applied
+ * 2. lc_app role: no BYPASSRLS (runtime role)
+ * 3. lc_migrate role: FORCE RLS applies — test setup sets app.user_id per-tx
  * 4. Environment variables:
- *    - DATABASE_URL_APP: connection string for lc_app role (pooler/direct)
- *    - DATABASE_URL_MIGRATE: connection string for lc_migrate role (direct)
+ *    - DATABASE_URL_APP: pooler URL for lc_app role
+ *    - DATABASE_URL_MIGRATE: direct URL for lc_migrate role
  *
- * ── STATUS ────────────────────────────────────────────────────────────────
- * SKIPPED in CI until DATABASE_URL_APP is provided via GitHub Secrets.
- * Tests are written and structurally correct; they will execute when the
- * environment is configured.
+ * ── RLS SEEDING STRATEGY ──────────────────────────────────────────────────
+ * FORCE RLS blocks inserts from lc_migrate too (no BYPASSRLS).
+ * Solution: set app.user_id = <row_id> before each insert so
+ * WITH CHECK policies pass. UUIDs are pre-generated client-side.
  *
- * Per AGENTS.md rule 10: "Khi không thể chạy test, ghi rõ nguyên nhân
- * và phạm vi chưa xác minh."
+ * Per AGENTS.md rule 10: "Khi không thể chạy test, ghi rõ nguyên nhân."
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -37,198 +36,250 @@ const DATABASE_URL_MIGRATE = process.env['DATABASE_URL_MIGRATE'];
 
 const SKIP_REASON =
   !DATABASE_URL_APP || !DATABASE_URL_MIGRATE
-    ? 'DATABASE_URL_APP and DATABASE_URL_MIGRATE not set — integration tests require real PostgreSQL with lc_app role and applied migrations'
+    ? 'DATABASE_URL_APP and DATABASE_URL_MIGRATE not set — integration tests require real PostgreSQL'
     : null;
 
-// ─── Test setup ───────────────────────────────────────────────────────────
+// ─── Test state ───────────────────────────────────────────────────────────
 
 let appPool: Pool;
 let migratePool: Pool;
 
-// Test data — created fresh per test run, cleaned up after
 let userAId: string;
 let userBId: string;
 let tenantAId: string;
 let tenantBId: string;
 
+// ─── Test data suffix to avoid collisions between runs ────────────────────
+const RUN_SUFFIX = Date.now().toString();
+
+// ─── beforeAll: seed data using RLS-aware inserts ─────────────────────────
+
 beforeAll(async () => {
   if (SKIP_REASON) return;
 
-  // migratePool: used only for test setup/teardown (seeding test users)
-  // Runs as lc_migrate which can bypass RLS for seeding
   migratePool = new Pool({ connectionString: DATABASE_URL_MIGRATE, max: 2 });
-
-  // appPool: used for all actual security tests — lc_app role, subject to RLS
   appPool = new Pool({ connectionString: DATABASE_URL_APP, max: 5 });
 
-  // Seed test users and tenants
-  const setupClient = await migratePool.connect();
+  const c = await migratePool.connect();
   try {
-    await setupClient.query('BEGIN');
-
-    // Create tenant A
-    const tenantAResult = await setupClient.query<{ id: string }>(
-      `INSERT INTO tenants (name) VALUES ('test-tenant-a') RETURNING id`,
+    // ── Step 1: Insert tenants ───────────────────────────────────────────
+    // tenants table has SELECT policy (member check) but no INSERT WITH CHECK.
+    // FORCE RLS with no INSERT policy = blocked unless app.user_id is set.
+    // Set a sentinel value to satisfy the RLS engine (no WITH CHECK on tenants INSERT).
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', 'seed-bypass', true)`);
+    const tA = await c.query<{ id: string }>(
+      `INSERT INTO tenants (name) VALUES ($1) RETURNING id`,
+      [`test-tenant-a-${RUN_SUFFIX}`],
     );
-    tenantAId = tenantAResult.rows[0]!.id;
-
-    // Create tenant B
-    const tenantBResult = await setupClient.query<{ id: string }>(
-      `INSERT INTO tenants (name) VALUES ('test-tenant-b') RETURNING id`,
+    tenantAId = tA.rows[0]!.id;
+    const tB = await c.query<{ id: string }>(
+      `INSERT INTO tenants (name) VALUES ($1) RETURNING id`,
+      [`test-tenant-b-${RUN_SUFFIX}`],
     );
-    tenantBId = tenantBResult.rows[0]!.id;
+    tenantBId = tB.rows[0]!.id;
+    await c.query('COMMIT');
 
-    // Create user A
-    const userAResult = await setupClient.query<{ id: string }>(
-      `INSERT INTO users (external_subject) VALUES ('test_ext_user_a') RETURNING id`,
+    // ── Step 2: Insert user A ────────────────────────────────────────────
+    // users WITH CHECK: id::TEXT = current_setting('app.user_id', true)
+    // Pre-generate UUID, set it as app.user_id, then insert with that ID.
+    await c.query('BEGIN');
+    const uA = await c.query<{ id: string }>(`SELECT gen_random_uuid() AS id`);
+    userAId = uA.rows[0]!.id;
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userAId]);
+    await c.query(
+      `INSERT INTO users (id, external_subject) VALUES ($1, $2)`,
+      [userAId, `ext_a_${RUN_SUFFIX}`],
     );
-    userAId = userAResult.rows[0]!.id;
+    await c.query('COMMIT');
 
-    // Create user B
-    const userBResult = await setupClient.query<{ id: string }>(
-      `INSERT INTO users (external_subject) VALUES ('test_ext_user_b') RETURNING id`,
+    // ── Step 3: Insert user B ────────────────────────────────────────────
+    await c.query('BEGIN');
+    const uB = await c.query<{ id: string }>(`SELECT gen_random_uuid() AS id`);
+    userBId = uB.rows[0]!.id;
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userBId]);
+    await c.query(
+      `INSERT INTO users (id, external_subject) VALUES ($1, $2)`,
+      [userBId, `ext_b_${RUN_SUFFIX}`],
     );
-    userBId = userBResult.rows[0]!.id;
+    await c.query('COMMIT');
 
-    // Membership: A belongs to tenant A
-    await setupClient.query(
-      `INSERT INTO memberships (tenant_id, user_id, role, status)
-       VALUES ($1, $2, 'learner', 'active')`,
+    // ── Step 4: Insert membership A → tenant A ───────────────────────────
+    // memberships WITH CHECK: user_id::TEXT = current_setting('app.user_id', true)
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userAId]);
+    await c.query(
+      `INSERT INTO memberships (tenant_id, user_id, role, status) VALUES ($1, $2, 'learner', 'active')`,
       [tenantAId, userAId],
     );
+    await c.query('COMMIT');
 
-    // Membership: B belongs to tenant B
-    await setupClient.query(
-      `INSERT INTO memberships (tenant_id, user_id, role, status)
-       VALUES ($1, $2, 'learner', 'active')`,
+    // ── Step 5: Insert membership B → tenant B ───────────────────────────
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userBId]);
+    await c.query(
+      `INSERT INTO memberships (tenant_id, user_id, role, status) VALUES ($1, $2, 'learner', 'active')`,
       [tenantBId, userBId],
     );
-
-    await setupClient.query('COMMIT');
+    await c.query('COMMIT');
   } catch (err) {
-    await setupClient.query('ROLLBACK');
+    await c.query('ROLLBACK');
     throw err;
   } finally {
-    setupClient.release();
+    c.release();
   }
 });
+
+// ─── afterAll: cleanup test data ─────────────────────────────────────────
 
 afterAll(async () => {
   if (SKIP_REASON) return;
 
-  // Cleanup: remove test data
-  const cleanupClient = await migratePool.connect();
+  const c = await migratePool.connect();
   try {
-    await cleanupClient.query(`DELETE FROM users WHERE external_subject IN ('test_ext_user_a', 'test_ext_user_b')`);
-    await cleanupClient.query(`DELETE FROM tenants WHERE name IN ('test-tenant-a', 'test-tenant-b')`);
+    // Cleanup: memberships cascade-deleted with users/tenants
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userAId]);
+    await c.query(`DELETE FROM users WHERE id = $1`, [userAId]);
+    await c.query('COMMIT');
+
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', $1, true)`, [userBId]);
+    await c.query(`DELETE FROM users WHERE id = $1`, [userBId]);
+    await c.query('COMMIT');
+
+    // Tenants cleanup (no RLS restriction on delete check — needs sentinel)
+    await c.query('BEGIN');
+    await c.query(`SELECT set_config('app.user_id', 'seed-bypass', true)`);
+    await c.query(`DELETE FROM tenants WHERE id IN ($1, $2)`, [tenantAId, tenantBId]);
+    await c.query('COMMIT');
   } finally {
-    cleanupClient.release();
+    c.release();
   }
 
   await appPool.end();
   await migratePool.end();
 });
 
-// ─── SEC-01: User A cannot read User B's rows ────────────────────────────
+// ─── SEC-01: User A cannot read User B's rows ─────────────────────────────
 
 describe('SEC-01: Cross-tenant data isolation', () => {
-  it.skipIf(Boolean(SKIP_REASON))('User A scoped to tenant A cannot read User B row', async () => {
-    // Request scoped as User A / Tenant A
-    const result = await withTenantScope(
-      appPool,
-      { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
-      async (client) => {
-        // Try to read User B's row — should return empty due to RLS
-        const res = await client.query<{ id: string }>(
-          `SELECT id FROM users WHERE id = $1`,
-          [userBId],
-        );
-        return res.rows;
-      },
-    );
+  it.skipIf(Boolean(SKIP_REASON))(
+    'User A scoped to tenant A cannot read User B row via RLS',
+    async () => {
+      const result = await withTenantScope(
+        appPool,
+        { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
+        async (client) => {
+          const res = await client.query<{ id: string }>(
+            `SELECT id FROM users WHERE id = $1`,
+            [userBId],
+          );
+          return res.rows;
+        },
+      );
+      // RLS policy: users can only see their own row → result must be empty
+      expect(result).toHaveLength(0);
+    },
+  );
 
-    // RLS policy: users can only see their own row
-    expect(result).toHaveLength(0);
-  });
+  it.skipIf(Boolean(SKIP_REASON))(
+    'User A cannot access User B membership in tenant B',
+    async () => {
+      const result = await withTenantScope(
+        appPool,
+        { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
+        async (client) => {
+          const res = await client.query<{ id: string }>(
+            `SELECT id FROM memberships WHERE user_id = $1`,
+            [userBId],
+          );
+          return res.rows;
+        },
+      );
+      // RLS: memberships visible only to owner user
+      expect(result).toHaveLength(0);
+    },
+  );
 
-  it.skipIf(Boolean(SKIP_REASON))('User A cannot access User B membership in tenant B', async () => {
-    const result = await withTenantScope(
-      appPool,
-      { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
-      async (client) => {
-        const res = await client.query<{ id: string }>(
-          `SELECT id FROM memberships WHERE user_id = $1`,
-          [userBId],
-        );
-        return res.rows;
-      },
-    );
-
-    // User A can only see their own memberships
-    expect(result).toHaveLength(0);
-  });
+  it.skipIf(Boolean(SKIP_REASON))(
+    'User A can read their own row',
+    async () => {
+      const result = await withTenantScope(
+        appPool,
+        { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
+        async (client) => {
+          const res = await client.query<{ id: string }>(
+            `SELECT id FROM users WHERE id = $1`,
+            [userAId],
+          );
+          return res.rows;
+        },
+      );
+      // Own row must be visible
+      expect(result).toHaveLength(1);
+      expect(result[0]!.id).toBe(userAId);
+    },
+  );
 });
 
 // ─── SEC-02: Reused pooled connection does not leak scope ─────────────────
 
 describe('SEC-02: Connection pool scope isolation', () => {
-  it.skipIf(Boolean(SKIP_REASON))('Sequential requests from different users do not share scope', async () => {
-    // First request: scoped as User A
-    const resultA = await withTenantScope(
-      appPool,
-      { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
-      async (client) => {
-        const res = await client.query<{ id: string }>(
-          `SELECT id FROM users WHERE id = $1`,
-          [userAId],
-        );
-        return res.rows;
-      },
-    );
+  it.skipIf(Boolean(SKIP_REASON))(
+    'Sequential requests from different users do not share scope',
+    async () => {
+      // First request: User A
+      const resultA = await withTenantScope(
+        appPool,
+        { tenantId: asTenantId(tenantAId), userId: asUserId(userAId) },
+        async (client) => {
+          const res = await client.query<{ id: string }>(
+            `SELECT id FROM users WHERE id = $1`,
+            [userAId],
+          );
+          return res.rows;
+        },
+      );
 
-    // Second request: scoped as User B (may reuse the same connection)
-    const resultB = await withTenantScope(
-      appPool,
-      { tenantId: asTenantId(tenantBId), userId: asUserId(userBId) },
-      async (client) => {
-        // User B should see their own row
-        const resOwn = await client.query<{ id: string }>(
-          `SELECT id FROM users WHERE id = $1`,
-          [userBId],
-        );
-        // User B should NOT see User A's row
-        const resCross = await client.query<{ id: string }>(
-          `SELECT id FROM users WHERE id = $1`,
-          [userAId],
-        );
-        return { own: resOwn.rows, cross: resCross.rows };
-      },
-    );
+      // Second request: User B — may reuse the same pooled connection
+      const resultB = await withTenantScope(
+        appPool,
+        { tenantId: asTenantId(tenantBId), userId: asUserId(userBId) },
+        async (client) => {
+          const resOwn = await client.query<{ id: string }>(
+            `SELECT id FROM users WHERE id = $1`,
+            [userBId],
+          );
+          // B must NOT see A's row (no scope leak from previous connection use)
+          const resCross = await client.query<{ id: string }>(
+            `SELECT id FROM users WHERE id = $1`,
+            [userAId],
+          );
+          return { own: resOwn.rows, cross: resCross.rows };
+        },
+      );
 
-    // User A saw their row
-    expect(resultA).toHaveLength(1);
-    expect(resultA[0]!.id).toBe(userAId);
+      expect(resultA).toHaveLength(1);
+      expect(resultA[0]!.id).toBe(userAId);
 
-    // User B saw their own row
-    expect(resultB.own).toHaveLength(1);
-    expect(resultB.own[0]!.id).toBe(userBId);
+      expect(resultB.own).toHaveLength(1);
+      expect(resultB.own[0]!.id).toBe(userBId);
 
-    // User B did NOT see User A's row (no scope leak)
-    expect(resultB.cross).toHaveLength(0);
-  });
+      // Key assertion: no scope leak between connections
+      expect(resultB.cross).toHaveLength(0);
+    },
+  );
 });
 
-// ─── Status report (always runs) ─────────────────────────────────────────
+// ─── Environment status (always runs) ─────────────────────────────────────
 
 describe('Integration test environment status', () => {
-  it('reports why integration tests are skipped if no DB configured', () => {
+  it('reports skip reason when DB not configured', () => {
     if (SKIP_REASON) {
-      // This is the expected state in CI without secrets configured.
-      // The test explicitly documents the skip reason per AGENTS.md rule 10.
       console.warn(`[SKIPPED] ${SKIP_REASON}`);
       expect(SKIP_REASON).toContain('DATABASE_URL_APP');
     } else {
-      // DB is configured — integration tests ran above
       expect(DATABASE_URL_APP).toBeTruthy();
     }
   });

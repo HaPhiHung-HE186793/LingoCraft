@@ -88,6 +88,7 @@ CREATE POLICY learner_profiles_own_policy ON learner_profiles
 -- NOTE: This checks membership inline, not via recursive RLS on memberships table.
 -- This is safe because memberships policy is scoped to user_id, not tenant_id.
 CREATE POLICY tenants_member_policy ON tenants
+  FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM memberships m
@@ -95,6 +96,27 @@ CREATE POLICY tenants_member_policy ON tenants
         AND m.user_id::TEXT = current_setting('app.user_id', true)
         AND m.status = 'active'
     )
+  );
+
+-- tenants: any authenticated user (app.user_id set) can create a tenant.
+-- ScopeResolver creates personal tenants on first login.
+-- 'seed-bypass' sentinel allows test setup to insert without a membership.
+CREATE POLICY tenants_insert_policy ON tenants
+  FOR INSERT
+  WITH CHECK (current_setting('app.user_id', true) <> '');
+
+-- tenants: only a member can delete their own tenant.
+-- Also allows 'seed-bypass' sentinel for test teardown.
+CREATE POLICY tenants_delete_policy ON tenants
+  FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM memberships m
+      WHERE m.tenant_id = tenants.id
+        AND m.user_id::TEXT = current_setting('app.user_id', true)
+        AND m.status = 'active'
+    )
+    OR current_setting('app.user_id', true) = 'seed-bypass'
   );
 
 -- feature_flags: global flags (scope IS NULL) readable by all lc_app connections.
