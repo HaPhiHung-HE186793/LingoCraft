@@ -19,8 +19,9 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@lingocraft/domain": "workspace:*",
-    "@lingocraft/database": "workspace:*"
+    "@clerk/backend": "^3.18.1",
+    "@lingocraft/database": "workspace:*",
+    "@lingocraft/domain": "workspace:*"
   },
   "devDependencies": {
     "@lingocraft/config": "workspace:*",

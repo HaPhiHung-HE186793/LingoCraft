@@ -1,33 +1,33 @@
 /**
- * Clerk auth adapter — implements AuthPort using @clerk/backend SDK.
+ * Clerk auth adapter — implements AuthPort using @clerk/backend SDK v3.
  *
  * Per spec §19.1 and ADR-006:
  *   "Kiểm tra token bằng SDK/backend verification phù hợp,
  *    không tự viết thuật toán xác minh chữ ký."
  *
- * IMPORTANT: This adapter requires CLERK_SECRET_KEY environment variable.
- * Do NOT hardcode the key. Do NOT log tokens or secrets.
+ * Per safe-ai-generation SKILL.md:
+ *   "Không log token hoặc secret; không hardcode key."
  *
- * For tests: use FakeAuthAdapter (fake-auth.adapter.ts) instead.
- *
- * Status: SCAFFOLD — Clerk SDK (@clerk/backend) not yet installed.
- * When installing: pin the version that was stable at scaffold time.
- * Run: pnpm --filter @lingocraft/api add @clerk/backend@<verified_version>
- *
- * Unverified claim: We document the expected API here based on Clerk docs.
- * The actual import path and method signature MUST be verified against the
- * installed version before this code is used in production.
+ * Verified API (@clerk/backend@3.18.1):
+ *   - verifyToken(token, options) is a top-level export
+ *   - Returns JwtPayload with .sub = Clerk user ID (external subject)
+ *   - Throws on invalid/expired tokens automatically
+ *   - Validates signature via JWKS, issuer, exp, nbf
  */
 
+import { verifyToken as clerkVerifyToken } from '@clerk/backend';
 import { DomainError, DomainErrorCode, asUserId } from '@lingocraft/domain';
 import type { AuthPort, VerifiedIdentity } from './ports.js';
 
 /**
  * ClerkAuthAdapter — production auth verification via Clerk backend SDK.
  *
- * NOTE: @clerk/backend is NOT installed yet (T01 scope).
- * This adapter is a scaffold; actual SDK import is commented out.
- * Install @clerk/backend and uncomment the import in T02 integration work.
+ * Usage:
+ *   const adapter = new ClerkAuthAdapter(process.env.CLERK_SECRET_KEY!);
+ *   const identity = await adapter.verifyToken(bearerToken);
+ *
+ * The returned identity.externalSubject is the Clerk user_id (sub claim).
+ * Pass it to ScopeResolver to resolve the internal userId and tenantId.
  */
 export class ClerkAuthAdapter implements AuthPort {
   private readonly secretKey: string;
@@ -40,25 +40,36 @@ export class ClerkAuthAdapter implements AuthPort {
   }
 
   async verifyToken(rawToken: string): Promise<VerifiedIdentity> {
-    // ── SCAFFOLD NOTE ────────────────────────────────────────────────────────
-    // When @clerk/backend is installed, replace this block with:
-    //
-    //   import { createClerkClient } from '@clerk/backend';
-    //   const clerk = createClerkClient({ secretKey: this.secretKey });
-    //   const payload = await clerk.verifyToken(rawToken);
-    //   const externalSubject = payload.sub;
-    //   // Map externalSubject → internal userId via DB lookup (see ScopeResolver)
-    //
-    // Verify the actual API in the installed version's documentation before use.
-    // ─────────────────────────────────────────────────────────────────────────
+    if (!rawToken || rawToken.trim().length === 0) {
+      throw new DomainError(DomainErrorCode.UNAUTHORIZED, 'Missing bearer token');
+    }
 
-    // Placeholder: always reject until SDK is installed
-    void rawToken; // suppress unused warning
-    void this.secretKey;
-    throw new DomainError(
-      DomainErrorCode.UNAUTHORIZED,
-      'ClerkAuthAdapter: SDK not yet installed. Use FakeAuthAdapter in tests.',
-    );
+    let payload: Awaited<ReturnType<typeof clerkVerifyToken>>;
+    try {
+      // verifyToken validates: signature, issuer, exp, nbf, azp
+      // Throws on any validation failure (TokenVerificationError)
+      payload = await clerkVerifyToken(rawToken, { secretKey: this.secretKey });
+    } catch (cause) {
+      // Do NOT log rawToken — security risk
+      throw new DomainError(
+        DomainErrorCode.UNAUTHORIZED,
+        'Token verification failed',
+        cause instanceof Error ? { reason: cause.message } : undefined,
+      );
+    }
+
+    const externalSubject = payload.sub;
+    if (!externalSubject) {
+      throw new DomainError(DomainErrorCode.UNAUTHORIZED, 'Token missing sub claim');
+    }
+
+    // Note: userId returned here uses externalSubject as placeholder.
+    // The API guard calls ScopeResolver.resolveForSubject(externalSubject)
+    // to get the real internal UserId from the users table.
+    return {
+      userId: asUserId(externalSubject), // overwritten by ScopeResolver in guard
+      externalSubject,
+    };
   }
 }
 
